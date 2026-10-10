@@ -1,0 +1,3 @@
+# Store the CSVs byte for byte as make_data.py writes them (CRLF line
+# endings), so a checkout on any platform matches a fresh generate.
+*.csv -text
