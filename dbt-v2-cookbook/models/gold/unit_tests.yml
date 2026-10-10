@@ -1,0 +1,34 @@
+version: 2
+
+unit_tests:
+  - name: segment_boundaries
+    description: >
+      The four segments are decided by delivered order count, and three of
+      the four boundaries are off-by-one candidates. This pins all of them
+      with five rows and no warehouse data.
+    model: dim_customers
+    given:
+      - input: ref('silver_customers')
+        rows:
+          - {customer_id: 'C0', full_name: 'Zero', email: 'z@x.com', city: 'Pune',    address_state: 'MH', device_type: 'web', registration_date: '2025-01-01'}
+          - {customer_id: 'C1', full_name: 'One',  email: 'o@x.com', city: 'Pune',    address_state: 'MH', device_type: 'web', registration_date: '2025-01-01'}
+          - {customer_id: 'C4', full_name: 'Four', email: 'f@x.com', city: 'Chennai', address_state: 'TN', device_type: 'ios', registration_date: '2025-01-01'}
+          - {customer_id: 'C5', full_name: 'Five', email: 'v@x.com', city: 'Chennai', address_state: 'TN', device_type: 'ios', registration_date: '2025-01-01'}
+      - input: ref('silver_transactions')
+        rows:
+          - {order_id: 'O1',  customer_id: 'C1', order_status: 'Delivered', total_amount: 100.00, order_date: '2026-01-01'}
+          - {order_id: 'O2',  customer_id: 'C4', order_status: 'Delivered', total_amount: 100.00, order_date: '2026-01-01'}
+          - {order_id: 'O3',  customer_id: 'C4', order_status: 'Delivered', total_amount: 100.00, order_date: '2026-01-02'}
+          - {order_id: 'O4',  customer_id: 'C4', order_status: 'Delivered', total_amount: 100.00, order_date: '2026-01-03'}
+          - {order_id: 'O5',  customer_id: 'C4', order_status: 'Delivered', total_amount: 100.00, order_date: '2026-01-04'}
+          - {order_id: 'O6',  customer_id: 'C5', order_status: 'Delivered', total_amount: 100.00, order_date: '2026-01-01'}
+          - {order_id: 'O7',  customer_id: 'C5', order_status: 'Delivered', total_amount: 100.00, order_date: '2026-01-02'}
+          - {order_id: 'O8',  customer_id: 'C5', order_status: 'Delivered', total_amount: 100.00, order_date: '2026-01-03'}
+          - {order_id: 'O9',  customer_id: 'C5', order_status: 'Delivered', total_amount: 100.00, order_date: '2026-01-04'}
+          - {order_id: 'O10', customer_id: 'C5', order_status: 'Delivered', total_amount: 100.00, order_date: '2026-01-05'}
+    expect:
+      rows:
+        - {customer_id: 'C0', delivered_orders: 0, customer_segment: 'prospect'}
+        - {customer_id: 'C1', delivered_orders: 1, customer_segment: 'new'}
+        - {customer_id: 'C4', delivered_orders: 4, customer_segment: 'repeat'}
+        - {customer_id: 'C5', delivered_orders: 5, customer_segment: 'loyal'}

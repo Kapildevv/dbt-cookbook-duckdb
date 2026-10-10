@@ -1,0 +1,60 @@
+version: 2
+
+models:
+  - name: silver_customers
+    description: One row per customer, typed, with metadata flattened.
+    columns:
+      - name: customer_id
+        tests: [not_null, unique]
+      - name: registration_date
+        tests: [not_null]
+
+  - name: silver_products
+    description: One row per product, typed, with specs flattened.
+    columns:
+      - name: product_id
+        tests: [not_null, unique]
+      - name: base_price
+        tests: [non_negative]
+
+  - name: silver_transactions
+    description: >
+      One row per order line, typed, with GST and unit price derived and
+      the business status mapped to its internal code.
+    columns:
+      - name: order_id
+        tests: [not_null, unique]
+      - name: customer_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('silver_customers')
+                field: customer_id
+      - name: product_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('silver_products')
+                field: product_id
+      - name: quantity
+        tests: [not_null, non_negative]
+      - name: order_status_code
+        description: Mapped from the seed. Null means an unmapped status.
+        tests: [not_null]
+
+  - name: silver_payments
+    description: One payment per order, with gateway metadata flattened.
+    columns:
+      - name: payment_id
+        tests: [not_null, unique]
+      - name: payment_status
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Success', 'Failed']
+
+  - name: silver_cashback
+    description: Cashback rows, typed. Not every order has one.
+    columns:
+      - name: reward_id
+        tests: [not_null, unique]

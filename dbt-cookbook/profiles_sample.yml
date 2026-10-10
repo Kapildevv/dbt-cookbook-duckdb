@@ -1,0 +1,11 @@
+# Copy this file to profiles.yml, which git ignores (chapter 1: profiles.yml
+# never goes in git). Nothing in it is a secret on DuckDB. On a real warehouse
+# every credential comes from env_var() -- the appendix has a profile for each.
+ecom:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: ecom.duckdb
+      schema: main
+      threads: 4

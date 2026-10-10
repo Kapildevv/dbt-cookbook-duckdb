@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: bronze_transactions
+    description: Raw orders, unchanged from source.
+    columns:
+      - name: order_id
+        description: Order line identifier. Unique in the source.
+        tests:
+          - not_null
+          - unique
+      - name: order_status
+        description: Business status vocabulary.
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Delivered', 'Cancelled', 'InTransit']
+              config:
+                severity: warn
+      - name: total_amount
+        description: Order value in INR, as text at this layer.
+        tests:
+          - non_negative
+
+  - name: bronze_customers
+    description: >
+      Raw customers, unchanged from source. The feed re-sends a whole row
+      when a field is corrected, so customer_id is NOT unique here. That
+      is a source fact, reported rather than hidden -- silver collapses it.
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+          - unique:
+              config:
+                severity: warn
+
+  - name: bronze_products
+    description: Raw product catalogue, unchanged from source.
+    columns:
+      - name: product_id
+        tests: [not_null, unique]
+
+  - name: bronze_pg_data
+    description: Raw payment gateway rows, unchanged from source.
+    columns:
+      - name: payment_id
+        tests: [not_null, unique]
+
+  - name: bronze_cashback_rewards
+    description: Raw cashback rows, unchanged from source.
+    columns:
+      - name: reward_id
+        tests: [not_null, unique]

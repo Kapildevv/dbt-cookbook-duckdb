@@ -1,0 +1,35 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: One row per customer, with lifetime delivered-order facts.
+    columns:
+      - name: customer_id
+        tests: [not_null, unique]
+      - name: customer_segment
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['prospect', 'new', 'repeat', 'loyal']
+      - name: lifetime_value
+        tests: [non_negative]
+
+  - name: fct_orders
+    description: '{{ doc("order_grain") }}'
+    columns:
+      - name: order_id
+        tests: [not_null, unique]
+      - name: customer_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+      - name: total_amount
+        tests: [not_null, non_negative]
+
+  - name: agg_daily_sales
+    description: Delivered revenue per day and category.
+
+  - name: customer_order_gaps
+    description: Months between a customer's delivered orders.

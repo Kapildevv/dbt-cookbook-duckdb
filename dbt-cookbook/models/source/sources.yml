@@ -1,0 +1,27 @@
+version: 2
+
+sources:
+  - name: raw
+    description: >
+      Tables landed by the EL tool. dbt does not create these; it only reads
+      them. Everything arrives as text, which is why the silver layer casts.
+    schema: raw
+    tables:
+      - name: customers
+        description: One row per registered customer.
+      - name: products
+        description: Product catalogue.
+      - name: transactions
+        description: One row per order line placed on the storefront.
+        config:
+          loaded_at_field: "cast(order_date as timestamp)"
+          freshness:
+            # The shipped dataset is frozen at April 2026, so realistic
+            # thresholds would report STALE forever. These are widened so a
+            # reader sees a PASS; tighten them for real data.
+            warn_after: {count: 365, period: day}
+            error_after: {count: 1095, period: day}
+      - name: pg_data
+        description: Payment gateway responses, one per order.
+      - name: cashback_rewards
+        description: Cashback issued against an order. Not every order has one.

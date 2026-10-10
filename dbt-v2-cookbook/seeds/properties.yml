@@ -1,0 +1,14 @@
+version: 2
+
+seeds:
+  - name: mapping
+    description: >
+      Business status vocabulary mapped to the internal codes the finance
+      system uses. Small, changes rarely, and lives in the repo because it
+      is a business decision rather than source data -- which is exactly
+      what a seed is for.
+    columns:
+      - name: status_text
+        tests: [not_null, unique]
+      - name: status_code
+        tests: [not_null]

@@ -1,0 +1,42 @@
+name: 'ecom'
+version: '1.0.0'
+config-version: 2
+profile: 'ecom'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  ecom:
+    +static_analysis: baseline
+    bronze:
+      +materialized: view
+      +schema: bronze
+      +group: warehouse_internal
+      +access: private
+    silver:
+      +materialized: table
+      +schema: silver
+      +group: warehouse_internal
+      +access: protected
+    gold:
+      +static_analysis: strict
+      +materialized: table
+      +schema: gold
+      +group: analytics
+      +access: public
+
+seeds:
+  ecom:
+    +schema: seed
+
+info_schema:
+  version: 1

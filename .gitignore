@@ -1,0 +1,15 @@
+# Everything below is rebuilt by load_raw.py and dbt build.
+target/
+dbt_packages/
+dbt_internal_packages/
+logs/
+*.duckdb
+*.duckdb.wal
+.user.yml
+
+# Credentials never go in git. Copy profiles_sample.yml to profiles.yml.
+profiles.yml
+.env
+
+.venv/
+__pycache__/

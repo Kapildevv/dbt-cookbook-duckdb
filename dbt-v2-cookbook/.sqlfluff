@@ -1,0 +1,14 @@
+# dbt lint and dbt format are SQLFluff underneath, and read this file.
+#
+# templater = dbt is required: the built-in linter refuses the `jinja`
+# templater and warns on every run until this is set.
+[sqlfluff]
+templater = dbt
+dialect = duckdb
+
+# Two rules this project argues with, decided once and written down:
+#   ST06  column ordering -- our staging models read better grouped by
+#         meaning than by SQLFluff's wildcards-then-scalars-then-aggregates.
+#   RF04  keyword as identifier -- `locale` is a column name in the source
+#         and we do not rename source columns in bronze.
+exclude_rules = ST06, RF04

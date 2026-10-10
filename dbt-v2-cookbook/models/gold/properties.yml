@@ -1,0 +1,115 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: One row per customer, with lifetime delivered-order facts.
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: customer_id
+        description: Stable customer key. The contract pins it as text.
+        data_type: varchar
+        constraints:
+          - type: not_null
+        tests: [not_null, unique]
+      - name: full_name
+        data_type: varchar
+      - name: email
+        data_type: varchar
+      - name: city
+        data_type: varchar
+      - name: address_state
+        data_type: varchar
+      - name: device_type
+        data_type: varchar
+      - name: registration_date
+        data_type: date
+      - name: delivered_orders
+        description: Count of delivered orders, zero for a prospect.
+        data_type: bigint
+      - name: lifetime_value
+        description: Sum of delivered order value, INR.
+        data_type: decimal(12, 2)
+        tests: [non_negative]
+      - name: first_order_date
+        data_type: date
+      - name: most_recent_order_date
+        data_type: date
+      - name: customer_segment
+        description: prospect | new | repeat | loyal.
+        data_type: varchar
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['prospect', 'new', 'repeat', 'loyal']
+
+  - name: fct_orders
+    description: The warehouse grain -- one row per order line, fully joined.
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: order_id
+        data_type: varchar
+        tests: [not_null, unique]
+      - name: ordered_at
+        data_type: timestamp
+      - name: order_date
+        data_type: date
+      - name: order_status
+        data_type: varchar
+      - name: order_status_code
+        data_type: integer
+      - name: customer_id
+        data_type: varchar
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+      - name: customer_name
+        data_type: varchar
+      - name: city
+        data_type: varchar
+      - name: address_state
+        data_type: varchar
+      - name: product_id
+        data_type: varchar
+      - name: product_name
+        data_type: varchar
+      - name: category
+        data_type: varchar
+      - name: brand
+        data_type: varchar
+      - name: quantity
+        data_type: integer
+      - name: unit_price
+        data_type: double
+      - name: total_amount
+        data_type: decimal(12,2)
+        tests: [not_null, non_negative]
+      - name: gst_amount
+        data_type: decimal(12,2)
+      - name: payment_method
+        data_type: varchar
+      - name: gateway_name
+        data_type: varchar
+      - name: payment_status
+        data_type: varchar
+      - name: processing_fee
+        data_type: decimal(12,2)
+      - name: cashback_amount
+        data_type: decimal(12,2)
+      - name: cashback_status
+        data_type: varchar
+
+  - name: agg_daily_sales
+    description: Delivered revenue per day and category.
+    config:
+      access: protected
+
+  - name: customer_order_gaps
+    description: Months between a customer's delivered orders.
+    config:
+      access: protected

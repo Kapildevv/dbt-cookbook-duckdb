@@ -1,0 +1,19 @@
+version: 2
+
+groups:
+  - name: warehouse_internal
+    description: >
+      Bronze and silver. Owned by the data platform team, and not an
+      interface: models in this group may be renamed or reshaped without
+      notice.
+    owner:
+      name: Data Platform
+      email: platform@example.com
+
+  - name: analytics
+    description: >
+      Gold. The published interface. Changing a model here is a breaking
+      change and goes through review.
+    owner:
+      name: Analytics Engineering
+      email: analytics@example.com
