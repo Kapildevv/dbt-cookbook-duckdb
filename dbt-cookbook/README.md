@@ -1,7 +1,7 @@
 # The project from *Data build tool (dbt) Cookbook* (first edition)
 
 This is the medallion warehouse the book builds, as it stands at the end of
-chapter 13 — with the three changes that make it ready for dbt v2 already
+chapter 13 — with the changes that make it ready for dbt v2 already
 applied. Every output printed in the book came from this project.
 
 Verified against **dbt Core 1.12.0** with **dbt-duckdb 1.11.0** on Python
