@@ -10,10 +10,10 @@ unit_tests:
     given:
       - input: ref('silver_customers')
         rows:
-          - {customer_id: 'C0', full_name: 'Zero', email: 'z@x.com', city: 'Pune',    address_state: 'MH', device_type: 'web', registration_date: '2025-01-01'}
-          - {customer_id: 'C1', full_name: 'One',  email: 'o@x.com', city: 'Pune',    address_state: 'MH', device_type: 'web', registration_date: '2025-01-01'}
-          - {customer_id: 'C4', full_name: 'Four', email: 'f@x.com', city: 'Chennai', address_state: 'TN', device_type: 'ios', registration_date: '2025-01-01'}
-          - {customer_id: 'C5', full_name: 'Five', email: 'v@x.com', city: 'Chennai', address_state: 'TN', device_type: 'ios', registration_date: '2025-01-01'}
+          - {customer_id: 'C0', full_name: 'Zero', email: 'z@example.com', city: 'Pune',    address_state: 'MH', device_type: 'web', registration_date: '2025-01-01'}
+          - {customer_id: 'C1', full_name: 'One',  email: 'o@example.com', city: 'Pune',    address_state: 'MH', device_type: 'web', registration_date: '2025-01-01'}
+          - {customer_id: 'C4', full_name: 'Four', email: 'f@example.com', city: 'Chennai', address_state: 'TN', device_type: 'ios', registration_date: '2025-01-01'}
+          - {customer_id: 'C5', full_name: 'Five', email: 'v@example.com', city: 'Chennai', address_state: 'TN', device_type: 'ios', registration_date: '2025-01-01'}
       - input: ref('silver_transactions')
         rows:
           - {order_id: 'O1',  customer_id: 'C1', order_status: 'Delivered', total_amount: 100.00, order_date: '2026-01-01'}
